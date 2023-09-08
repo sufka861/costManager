@@ -5,6 +5,7 @@ import il.ac.shenkar.java.costmanager.domain.model.Cost;
 import il.ac.shenkar.java.costmanager.domain.repository.interfaces.CategoryRepository;
 import il.ac.shenkar.java.costmanager.domain.util.DatabaseConnectionManager;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 public class CategoryRepositoryImpl implements CategoryRepository {
     private Connection connection;
 
-    public CategoryRepositoryImpl() {
+    public CategoryRepositoryImpl() throws SQLException, IOException {
         connection = DatabaseConnectionManager.getInstance().getConnection();
     }
 

@@ -3,6 +3,7 @@ package il.ac.shenkar.java.costmanager.domain.repository.implementations;
 import il.ac.shenkar.java.costmanager.domain.model.Cost;
 import il.ac.shenkar.java.costmanager.domain.util.DatabaseConnectionManager;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 public class CostRepositoryImpl {
     private Connection connection;
 
-    public CostRepositoryImpl() {
+    public CostRepositoryImpl() throws SQLException, IOException {
         connection = DatabaseConnectionManager.getInstance().getConnection();
     }
 
