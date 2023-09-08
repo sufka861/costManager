@@ -1,6 +1,7 @@
 package il.ac.shenkar.java.costmanager.ui;
 
 import il.ac.shenkar.java.costmanager.domain.model.Cost;
+import il.ac.shenkar.java.costmanager.domain.usecase.implementations.GetCostReportUseCaseImpl;
 import il.ac.shenkar.java.costmanager.viewmodel.ReportViewModel;
 
 import javax.swing.*;
@@ -10,12 +11,11 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class ReportDialog extends JDialog {
-    private final ReportViewModel reportViewModel;
+    private final ReportViewModel reportViewModel = new ReportViewModel(new GetCostReportUseCaseImpl());
     private final JTextField dateField;
 
     public ReportDialog(Frame owner, ReportViewModel reportViewModel) {
         super(owner, "Cost Report", true);
-        this.reportViewModel = reportViewModel;
         setSize(600, 400);
         dateField = new JTextField();
 

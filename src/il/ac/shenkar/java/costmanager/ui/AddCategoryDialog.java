@@ -1,19 +1,21 @@
 package il.ac.shenkar.java.costmanager.ui;
 
+import il.ac.shenkar.java.costmanager.domain.usecase.implementations.AddCategoryUseCaseImpl;
 import il.ac.shenkar.java.costmanager.viewmodel.CategoryViewModel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
 
 public class AddCategoryDialog extends JDialog {
-    private final CategoryViewModel categoryViewModel;
+    private final CategoryViewModel categoryViewModel = new CategoryViewModel(new AddCategoryUseCaseImpl());
     private JTextField nameField;
 
-    public AddCategoryDialog(Frame owner, CategoryViewModel categoryViewModel) {
+    public AddCategoryDialog(Frame owner, CategoryViewModel categoryViewModel) throws SQLException, IOException {
         super(owner, "Add Category", true);
-        this.categoryViewModel = categoryViewModel;
         setSize(300, 200);
 
         initUI();
@@ -69,8 +71,19 @@ public class AddCategoryDialog extends JDialog {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame();
-            CategoryViewModel categoryViewModel = new CategoryViewModel(null);
-            AddCategoryDialog addCategoryDialog = new AddCategoryDialog(frame, categoryViewModel);
+            CategoryViewModel categoryViewModel = null;
+            try {
+                categoryViewModel = new CategoryViewModel(new AddCategoryUseCaseImpl());
+            } catch (SQLException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            AddCategoryDialog addCategoryDialog = null;
+            try {
+                addCategoryDialog = new AddCategoryDialog(frame, categoryViewModel);
+            } catch (SQLException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            // TODO HANDLE EXCEPTIONS with try catch
             addCategoryDialog.setVisible(true);
         });
     }

@@ -1,9 +1,14 @@
 package il.ac.shenkar.java.costmanager.ui;
 
+import il.ac.shenkar.java.costmanager.domain.usecase.interfaces.AddCategoryUseCase;
+import il.ac.shenkar.java.costmanager.viewmodel.CategoryViewModel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
 
 public class MainFrame extends JFrame {
     public MainFrame()
@@ -30,7 +35,11 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                new AddCategoryDialog(MainFrame.this, null).setVisible(true);
+                try {
+                    new AddCategoryDialog(MainFrame.this, null).setVisible(true);
+                } catch (SQLException | IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 

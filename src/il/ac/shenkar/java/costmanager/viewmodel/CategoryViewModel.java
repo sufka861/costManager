@@ -3,7 +3,7 @@ package il.ac.shenkar.java.costmanager.viewmodel;
 import il.ac.shenkar.java.costmanager.domain.usecase.interfaces.AddCategoryUseCase;
 
 public class CategoryViewModel {
-    private AddCategoryUseCase addCategoryUseCase;
+    private final AddCategoryUseCase addCategoryUseCase;
 
     public CategoryViewModel(AddCategoryUseCase addCategoryUseCase)
     {
