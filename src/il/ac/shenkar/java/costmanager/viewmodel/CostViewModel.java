@@ -10,10 +10,6 @@ public class CostViewModel {
         this.addCostUseCase = addCostUseCase;
     }
 
-    public CostViewModel() {
-        this.addCostUseCase = null;
-    }
-
     public void addCost(Cost cost) {
         if (addCostUseCase != null) {
             addCostUseCase.addCost(cost);

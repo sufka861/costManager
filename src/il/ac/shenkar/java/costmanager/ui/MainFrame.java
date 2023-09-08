@@ -26,7 +26,11 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                new AddCostDialog(MainFrame.this, null).setVisible(true);
+                try {
+                    new AddCostDialog(MainFrame.this, null).setVisible(true);
+                } catch (SQLException | IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 

@@ -2,24 +2,27 @@ package il.ac.shenkar.java.costmanager.ui;
 
 import il.ac.shenkar.java.costmanager.domain.model.Category;
 import il.ac.shenkar.java.costmanager.domain.model.Cost;
+import il.ac.shenkar.java.costmanager.domain.usecase.implementations.AddCostUseCaseImpl;
 import il.ac.shenkar.java.costmanager.viewmodel.CostViewModel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Date;
 
 public class AddCostDialog extends JDialog {
-    private final CostViewModel costViewModel;
+    private final CostViewModel costViewModel = new CostViewModel(new AddCostUseCaseImpl());
+
     private final JTextField categoryField;
     private final JTextField sumField;
     private final JTextField currencyField;
     private final JTextField descriptionField;
 
-    public AddCostDialog(Frame owner, CostViewModel costViewModel) {
+    public AddCostDialog(Frame owner, CostViewModel costViewModel) throws SQLException, IOException {
         super(owner, "Add Cost", true);
-        this.costViewModel = costViewModel;
         setSize(400, 300);
 
         categoryField = new JTextField();
@@ -90,8 +93,20 @@ public class AddCostDialog extends JDialog {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame();
-            CostViewModel costViewModel = new CostViewModel();
-            AddCostDialog addCostDialog = new AddCostDialog(frame, costViewModel);
+            CostViewModel costViewModel = null;
+            try {
+                costViewModel = new CostViewModel(new AddCostUseCaseImpl());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            AddCostDialog addCostDialog = null;
+            try {
+                addCostDialog = new AddCostDialog(frame, costViewModel);
+            } catch (SQLException | IOException e) {
+                throw new RuntimeException(e);
+            }
             addCostDialog.setVisible(true);
         });
     }

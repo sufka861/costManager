@@ -1,21 +1,24 @@
 package il.ac.shenkar.java.costmanager.domain.repository.implementations;
 
 import il.ac.shenkar.java.costmanager.domain.model.Cost;
+import il.ac.shenkar.java.costmanager.domain.repository.interfaces.CostRepository;
 import il.ac.shenkar.java.costmanager.domain.util.DatabaseConnectionManager;
 
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class CostRepositoryImpl {
+public class CostRepositoryImpl implements CostRepository {
     private Connection connection;
 
     public CostRepositoryImpl() throws SQLException, IOException {
         connection = DatabaseConnectionManager.getInstance().getConnection();
+        DatabaseConnectionManager.getInstance().createTableIfNotExists("COST");
     }
 
-    public void createCost(Cost cost) {
+    public void addCost(Cost cost) {
         String insertQuery = "INSERT INTO costs (description) VALUES (?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, cost.getDescription());
@@ -28,6 +31,16 @@ public class CostRepositoryImpl {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Cost getCostById(int costId) {
+        return null;
+    }
+
+    @Override
+    public List<Cost> getCostsByDate(Date date) {
+        return null;
     }
 
     public List<Cost> getAllCosts() {
