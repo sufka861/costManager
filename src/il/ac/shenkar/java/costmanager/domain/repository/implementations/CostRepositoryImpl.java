@@ -15,13 +15,17 @@ public class CostRepositoryImpl implements CostRepository {
 
     public CostRepositoryImpl() throws SQLException, IOException {
         connection = DatabaseConnectionManager.getInstance().getConnection();
-        DatabaseConnectionManager.getInstance().createTableIfNotExists("COST");
+        DatabaseConnectionManager.getInstance().createTableIfNotExists("COSTS");
     }
 
     public void addCost(Cost cost) {
-        String insertQuery = "INSERT INTO costs (description) VALUES (?)";
+        String insertQuery = "INSERT INTO COSTS (category, amount, currency, description, date) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, cost.getDescription());
+            preparedStatement.setString(1, cost.getCategoryString());
+            preparedStatement.setDouble(2, cost.getSum());
+            preparedStatement.setString(3, cost.getCurrency());
+            preparedStatement.setString(4, cost.getDescription());
+            preparedStatement.setDate(5, new java.sql.Date(cost.getDate().getTime()));
             preparedStatement.executeUpdate();
 
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
