@@ -52,7 +52,11 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                new ReportDialog(MainFrame.this, null).setVisible(true);
+                try {
+                    new ReportDialog(MainFrame.this, null).setVisible(true);
+                } catch (SQLException | IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 

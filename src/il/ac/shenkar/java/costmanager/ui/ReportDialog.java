@@ -8,13 +8,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class ReportDialog extends JDialog {
     private final ReportViewModel reportViewModel = new ReportViewModel(new GetCostReportUseCaseImpl());
     private final JTextField dateField;
 
-    public ReportDialog(Frame owner, ReportViewModel reportViewModel) {
+    public ReportDialog(Frame owner, ReportViewModel reportViewModel) throws SQLException, IOException {
         super(owner, "Cost Report", true);
         setSize(600, 400);
         dateField = new JTextField();
@@ -43,10 +49,15 @@ public class ReportDialog extends JDialog {
     }
 
     private void generateAction(ActionEvent e) {
-        String date = dateField.getText().trim();
+        String dateText = dateField.getText().trim();
 
-        if (date.isEmpty()) {
+        if (dateText.isEmpty()) {
             showMessage("Please enter a valid date.");
+            return;
+        }
+        Date date = parseDate(dateText);
+        if(date == null){
+            showMessage("Invalid Date");
             return;
         }
 
@@ -66,6 +77,15 @@ public class ReportDialog extends JDialog {
         JOptionPane.showMessageDialog(this, scrollPane, "Report", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    private Date parseDate(String dateText) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Adjust the date format pattern as needed
+        try {
+            return dateFormat.parse(dateText);
+        } catch (ParseException e) {
+            return null; // Parsing failed
+        }
+    }
+
     private void cancelAction(ActionEvent e) {
         dispose();
     }
@@ -78,7 +98,12 @@ public class ReportDialog extends JDialog {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame();
             ReportViewModel reportViewModel = new ReportViewModel(null);
-            ReportDialog reportDialog = new ReportDialog(frame, reportViewModel);
+            ReportDialog reportDialog = null;
+            try {
+                reportDialog = new ReportDialog(frame, reportViewModel);
+            } catch (SQLException | IOException e) {
+                throw new RuntimeException(e);
+            }
             reportDialog.setVisible(true);
         });
     }
