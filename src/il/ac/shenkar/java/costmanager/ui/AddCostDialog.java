@@ -4,6 +4,8 @@ import il.ac.shenkar.java.costmanager.domain.model.Category;
 import il.ac.shenkar.java.costmanager.domain.model.Cost;
 import il.ac.shenkar.java.costmanager.domain.usecase.implementations.AddCostUseCaseImpl;
 import il.ac.shenkar.java.costmanager.viewmodel.CostViewModel;
+import il.ac.shenkar.java.costmanager.domain.util.ConfigurationManager;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,8 +20,13 @@ public class AddCostDialog extends JDialog {
 
     private final JTextField categoryField;
     private final JTextField sumField;
-    private final JTextField currencyField;
     private final JTextField descriptionField;
+    private JComboBox<String> currencyField;
+
+
+
+
+
 
     public AddCostDialog(Frame owner, CostViewModel costViewModel) throws SQLException, IOException {
         super(owner, "Add Cost", true);
@@ -27,7 +34,7 @@ public class AddCostDialog extends JDialog {
 
         categoryField = new JTextField();
         sumField = new JTextField();
-        currencyField = new JTextField();
+        currencyField = new JComboBox<String>();
         descriptionField = new JTextField();
 
         initComponents();
@@ -37,8 +44,12 @@ public class AddCostDialog extends JDialog {
         JPanel panel = new JPanel(new GridLayout(5, 2));
         addLabelAndField(panel, "Category:", categoryField);
         addLabelAndField(panel, "Sum:", sumField);
-        addLabelAndField(panel, "Currency:", currencyField);
         addLabelAndField(panel, "Description:", descriptionField);
+
+        ConfigurationManager configurationManager = new ConfigurationManager();
+        String[] currencies = configurationManager.getSupportedCurrencies();
+        currencyField = new JComboBox<>(currencies);
+        addLabelAndComboBox(panel, "Currency:", currencyField);
 
         JButton saveButton = createButton("Save", this::saveAction);
         JButton cancelButton = createButton("Cancel", this::cancelAction);
@@ -54,6 +65,11 @@ public class AddCostDialog extends JDialog {
         panel.add(textField);
     }
 
+    private void addLabelAndComboBox(JPanel panel, String labelText, JComboBox<String> comboBox) {
+        panel.add(new JLabel(labelText));
+        panel.add(comboBox);
+    }
+
     private JButton createButton(String label, ActionListener listener) {
         JButton button = new JButton(label);
         button.addActionListener(listener);
@@ -63,7 +79,8 @@ public class AddCostDialog extends JDialog {
     private void saveAction(ActionEvent e) {
         String categoryText = categoryField.getText().trim();
         String sumText = sumField.getText().trim();
-        String currency = currencyField.getText().trim();
+//        String currency = currencyField.getText().trim();
+        String currency = (String) currencyField.getSelectedItem(); // Get the selected currency
         String description = descriptionField.getText().trim();
 
         if (categoryText.isEmpty() || sumText.isEmpty()) {
