@@ -5,6 +5,7 @@ import il.ac.shenkar.java.costmanager.domain.model.Cost;
 import il.ac.shenkar.java.costmanager.domain.usecase.implementations.AddCostUseCaseImpl;
 import il.ac.shenkar.java.costmanager.viewmodel.CostViewModel;
 import il.ac.shenkar.java.costmanager.domain.util.ConfigurationManager;
+import il.ac.shenkar.java.costmanager.domain.repository.implementations.CategoryRepositoryImpl;
 
 
 import javax.swing.*;
@@ -14,25 +15,22 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
 public class AddCostDialog extends JDialog {
     private final CostViewModel costViewModel = new CostViewModel(new AddCostUseCaseImpl());
 
-    private final JTextField categoryField;
+    private JComboBox<String> categoryField;
     private final JTextField sumField;
     private final JTextField descriptionField;
     private JComboBox<String> currencyField;
-
-
-
-
 
 
     public AddCostDialog(Frame owner, CostViewModel costViewModel) throws SQLException, IOException {
         super(owner, "Add Cost", true);
         setSize(400, 300);
 
-        categoryField = new JTextField();
+        categoryField = new JComboBox<String>();
         sumField = new JTextField();
         currencyField = new JComboBox<String>();
         descriptionField = new JTextField();
@@ -40,11 +38,20 @@ public class AddCostDialog extends JDialog {
         initComponents();
     }
 
-    private void initComponents() {
+    private void initComponents() throws SQLException, IOException {
         JPanel panel = new JPanel(new GridLayout(5, 2));
-        addLabelAndField(panel, "Category:", categoryField);
         addLabelAndField(panel, "Sum:", sumField);
         addLabelAndField(panel, "Description:", descriptionField);
+
+        CategoryRepositoryImpl categoryRepository = new CategoryRepositoryImpl();
+        List<Category> categories = categoryRepository.getAllCategories();
+        String[] categoryNames = new String[categories.size()];
+        int index = 0;
+        for(Category cat : categories){
+            categoryNames[index++] = cat.getName();
+        }
+        categoryField = new JComboBox<>(categoryNames);
+        addLabelAndComboBox(panel, "Category:", categoryField);
 
         ConfigurationManager configurationManager = new ConfigurationManager();
         String[] currencies = configurationManager.getSupportedCurrencies();
@@ -77,10 +84,9 @@ public class AddCostDialog extends JDialog {
     }
 
     private void saveAction(ActionEvent e) {
-        String categoryText = categoryField.getText().trim();
+        String categoryText = (String) categoryField.getSelectedItem();
         String sumText = sumField.getText().trim();
-//        String currency = currencyField.getText().trim();
-        String currency = (String) currencyField.getSelectedItem(); // Get the selected currency
+        String currency = (String) currencyField.getSelectedItem();
         String description = descriptionField.getText().trim();
 
         if (categoryText.isEmpty() || sumText.isEmpty()) {
