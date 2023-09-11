@@ -31,3 +31,4 @@ bin/
 costManagerDB
 libs
 ./derby.log
+derby.log
