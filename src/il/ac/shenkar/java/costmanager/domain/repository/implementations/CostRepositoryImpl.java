@@ -47,29 +47,28 @@ public class CostRepositoryImpl implements CostRepository {
     @Override
     public List<Cost> getCostsByDate(Date date) {
         List<Cost> costs = new ArrayList<>();
-        // TODO: FIX THIS get cost by actual date add "WHERE DATE = date"
-        String selectQuery = "SELECT * FROM costs";
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(selectQuery)) {
-            while (resultSet.next()) {
-                //int id = resultSet.getInt("id");
-                //Category category = (Category) resultSet.getObject("CATEGORY", Category.class);
-                String categoryIdentifier = resultSet.getString("CATEGORY"); // Retrieve the category identifier as a String
-                CategoryRepositoryImpl categoryRepository = new CategoryRepositoryImpl();
-                Category category = categoryRepository.getCategoryByName(categoryIdentifier); // Replace with your actual repository method
+        String selectQuery = "SELECT * FROM costs WHERE DATE = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
+            preparedStatement.setDate(1, new java.sql.Date(date.getTime()));
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    String categoryIdentifier = resultSet.getString("CATEGORY");
+                    CategoryRepositoryImpl categoryRepository = new CategoryRepositoryImpl();
+                    Category category = categoryRepository.getCategoryByName(categoryIdentifier);
 
-                String description = resultSet.getString("DESCRIPTION");
-                String currency = resultSet.getString("CURRENCY");
-                Date newDate = resultSet.getDate("DATE");
-                double amount = resultSet.getDouble("AMOUNT");
-                costs.add(new Cost(category, amount, currency, description, newDate));
+                    String description = resultSet.getString("DESCRIPTION");
+                    String currency = resultSet.getString("CURRENCY");
+                    Date newDate = resultSet.getDate("DATE");
+                    double amount = resultSet.getDouble("AMOUNT");
+                    costs.add(new Cost(category, amount, currency, description, newDate));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return costs;
+   return costs;
     }
 
     public List<Cost> getAllCosts() {
