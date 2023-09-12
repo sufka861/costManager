@@ -2,7 +2,14 @@ package il.ac.shenkar.java.costmanager.ui;
 
 import il.ac.shenkar.java.costmanager.domain.model.Cost;
 import il.ac.shenkar.java.costmanager.domain.usecase.implementations.GetCostReportUseCaseImpl;
+import il.ac.shenkar.java.costmanager.domain.util.DateLabelFormatter;
 import il.ac.shenkar.java.costmanager.viewmodel.ReportViewModel;
+import org.jdatepicker.DateModel;
+import org.jdatepicker.JDateComponentFactory;
+import org.jdatepicker.JDatePicker;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,28 +20,42 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 public class ReportDialog extends JDialog {
     private final ReportViewModel reportViewModel = new ReportViewModel(new GetCostReportUseCaseImpl());
-    // private final JDateChooser dateField;
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // TODO: MOVE THIS TO CONFIG- Customize the date format
-    private JFormattedTextField dateField;
-
+    private JDatePicker datePicker;
 
     public ReportDialog(Frame owner, ReportViewModel reportViewModel) throws SQLException, IOException {
         super(owner, "Cost Report", true);
         setSize(600, 400);
-        dateField = new JFormattedTextField(dateFormat);
-
+        datePicker = createDatePicker();
         initComponents();
     }
+
+    private JDatePicker createDatePicker() {
+        UtilDateModel model = new UtilDateModel();
+        Properties properties = new Properties();
+        properties.put("text.today", "Today");
+        properties.put("text.month", "Month");
+        properties.put("text.year", "Year");
+        JDatePanelImpl datePanel = new JDatePanelImpl(model, properties);
+        DateLabelFormatter dateLabelFormatter = new DateLabelFormatter();
+        JDatePicker datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+        model.setSelected(true);
+        return datePicker;
+    }
+
+
+
 
     private void initComponents() {
         JPanel panel = new JPanel(new GridLayout(2, 2));
         panel.add(new JLabel("Date:"));
-        panel.add(dateField);
+        panel.add((JComponent) datePicker);
 
         JButton generateButton = createButton("Generate Report", this::generateAction);
         JButton cancelButton = createButton("Cancel", this::cancelAction);
@@ -52,15 +73,10 @@ public class ReportDialog extends JDialog {
     }
 
     private void generateAction(ActionEvent e) {
-        String dateText = dateField.getText().trim();
+        Date date = (Date) datePicker.getModel().getValue();
 
-        if (dateText.isEmpty()) {
-            showMessage("Please enter a valid date.");
-            return;
-        }
-        Date date = parseDate(dateText);
-        if(date == null){
-            showMessage("Invalid Date");
+        if (date == null) {
+            showMessage("Please select a valid date.");
             return;
         }
 
@@ -78,15 +94,6 @@ public class ReportDialog extends JDialog {
 
         JScrollPane scrollPane = new JScrollPane(reportTextArea);
         JOptionPane.showMessageDialog(this, scrollPane, "Report", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    private Date parseDate(String dateText) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Adjust the date format pattern as needed
-        try {
-            return dateFormat.parse(dateText);
-        } catch (ParseException e) {
-            return null; // Parsing failed
-        }
     }
 
     private void cancelAction(ActionEvent e) {
@@ -108,6 +115,6 @@ public class ReportDialog extends JDialog {
                 throw new RuntimeException(e);
             }
             reportDialog.setVisible(true);
-        });
-    }
+   });
+}
 }
