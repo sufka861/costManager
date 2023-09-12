@@ -71,6 +71,23 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
+    public Category getCategoryByName(String wantedName) {
+        String selectQuery = "SELECT * FROM CATEGORIES WHERE NAME = ?";
+        String name = "";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
+            preparedStatement.setString(1, wantedName);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    name = resultSet.getString("name");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new Category(name);
+    }
+
+    @Override
     public void updateCategory(Category category) {
         String updateQuery = "UPDATE CATEGORIES SET name = ? WHERE id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {

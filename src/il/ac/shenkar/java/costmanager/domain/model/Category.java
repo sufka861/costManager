@@ -8,7 +8,7 @@ public class Category {
     {
         this.name = name;
         this.id = 0;
-        //TODO  - ADD COUNTER FOR ID NOT STATIC LIKE HERE
+        // TODO FIX ID MATCH WITH DB
     }
 
     public int getId()

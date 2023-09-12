@@ -1,6 +1,5 @@
 package il.ac.shenkar.java.costmanager.domain.model;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 public class Cost {
@@ -90,4 +89,11 @@ public class Cost {
         this.date = date;
     }
 
+    @Override
+    public String toString() {
+
+        return getCategory().getName() + " " + getSum() + " " + getCurrency() + " " + getDescription() + " " + getDate().toString();
+    }
 }
+
+

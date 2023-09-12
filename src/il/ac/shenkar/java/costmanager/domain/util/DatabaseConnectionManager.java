@@ -129,7 +129,8 @@ public class DatabaseConnectionManager {
                  System.out.println("Table " + tableName + " already exists.");
 //                Statement statement = connection.createStatement();
 //                statement.executeUpdate("DROP TABLE COSTS");
-//                System.out.println("DROPPED TABLE COSTS");
+//                statement.executeUpdate("DROP TABLE CATEGORIES");
+//                System.out.println("DROPPED TABLES!!!!!");
             }
 
             resultSet.close();

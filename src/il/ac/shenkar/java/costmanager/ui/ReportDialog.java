@@ -18,12 +18,15 @@ import java.util.List;
 
 public class ReportDialog extends JDialog {
     private final ReportViewModel reportViewModel = new ReportViewModel(new GetCostReportUseCaseImpl());
-    private final JTextField dateField;
+    // private final JDateChooser dateField;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // TODO: MOVE THIS TO CONFIG- Customize the date format
+    private JFormattedTextField dateField;
+
 
     public ReportDialog(Frame owner, ReportViewModel reportViewModel) throws SQLException, IOException {
         super(owner, "Cost Report", true);
         setSize(600, 400);
-        dateField = new JTextField();
+        dateField = new JFormattedTextField(dateFormat);
 
         initComponents();
     }

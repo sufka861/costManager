@@ -13,6 +13,7 @@ public class ConfigurationManager {
 
         try (InputStream inputStream = ConfigurationManager.class.getResourceAsStream("config.properties")) {
             if (inputStream != null) {
+                // TODO: INVERT if so its not nested
                 properties.load(inputStream);
 
                 String starterCategoryNamesProperty = properties.getProperty("starterCategoryNames");
