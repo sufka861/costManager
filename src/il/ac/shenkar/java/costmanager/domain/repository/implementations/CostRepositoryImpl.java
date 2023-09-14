@@ -4,7 +4,6 @@ import il.ac.shenkar.java.costmanager.domain.model.Category;
 import il.ac.shenkar.java.costmanager.domain.model.Cost;
 import il.ac.shenkar.java.costmanager.domain.repository.interfaces.CostRepository;
 import il.ac.shenkar.java.costmanager.domain.util.DatabaseConnectionManager;
-import il.ac.shenkar.java.costmanager.domain.repository.implementations.CategoryRepositoryImpl;
 
 import java.io.IOException;
 import java.sql.*;
@@ -54,7 +53,7 @@ public class CostRepositoryImpl implements CostRepository {
                 while (resultSet.next()) {
                     String categoryIdentifier = resultSet.getString("CATEGORY");
                     CategoryRepositoryImpl categoryRepository = new CategoryRepositoryImpl();
-                    Category category = categoryRepository.getCategoryByName(categoryIdentifier);
+                    Category category = categoryRepository.getCategory(categoryIdentifier);
 
                     String description = resultSet.getString("DESCRIPTION");
                     String currency = resultSet.getString("CURRENCY");

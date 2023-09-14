@@ -53,7 +53,7 @@ public class Cost {
         CategoryRepositoryImpl categoryRepository = new CategoryRepositoryImpl();
         try {
             // Validate that category exists in the DB and therefore it is valid
-            categoryRepository.getCategoryByName(category.getName());
+            categoryRepository.getCategory(category.getName());
             this.category = category;
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -1,7 +1,6 @@
 package il.ac.shenkar.java.costmanager.domain.repository.implementations;
 
 import il.ac.shenkar.java.costmanager.domain.model.Category;
-import il.ac.shenkar.java.costmanager.domain.model.Cost;
 import il.ac.shenkar.java.costmanager.domain.repository.interfaces.CategoryRepository;
 import il.ac.shenkar.java.costmanager.domain.util.DatabaseConnectionManager;
 
@@ -14,11 +13,9 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     private Connection connection;
 
     public CategoryRepositoryImpl() throws SQLException, IOException {
-
         connection = DatabaseConnectionManager.getInstance().getConnection();
         DatabaseConnectionManager.getInstance().createTableIfNotExists("CATEGORIES");
     }
-
 
     @Override
     public void addCategory(Category category) {
@@ -34,23 +31,6 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public Category getCategoryById(int categoryId) {
-        String selectQuery = "SELECT * FROM CATEGORIES WHERE id = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
-            preparedStatement.setInt(1, categoryId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                String name = resultSet.getString("name");
-                return new Category(name);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     @Override
@@ -70,7 +50,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
-    public Category getCategoryByName(String wantedName) {
+    public Category getCategory(String wantedName) {
         String selectQuery = "SELECT * FROM CATEGORIES WHERE NAME = ?";
         String name = "";
         try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
@@ -84,28 +64,5 @@ public class CategoryRepositoryImpl implements CategoryRepository {
             e.printStackTrace();
         }
         return new Category(name);
-    }
-
-    @Override
-    public void updateCategory(Category category) {
-        String updateQuery = "UPDATE CATEGORIES SET name = ? WHERE id = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
-            preparedStatement.setString(1, category.getName());
-            preparedStatement.setInt(2, category.getId());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void deleteCategory(int categoryId) {
-        String deleteQuery = "DELETE FROM CATEGORIES WHERE id = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
-            preparedStatement.setInt(1, categoryId);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 }
