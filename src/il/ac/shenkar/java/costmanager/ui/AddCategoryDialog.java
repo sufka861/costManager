@@ -21,12 +21,24 @@ public class AddCategoryDialog extends JDialog {
         initUI();
     }
 
+    public CategoryViewModel getCategoryViewModel() {
+        return categoryViewModel;
+    }
+
+    public JTextField getNameField() {
+        return nameField;
+    }
+
+    public void setNameField(JTextField nameField) {
+        this.nameField = nameField;
+    }
+
     private void initUI() {
         JPanel panel = new JPanel(new GridLayout(2, 2));
-        nameField = new JTextField();
+        setNameField(new JTextField());
 
         panel.add(new JLabel("Name:"));
-        panel.add(nameField);
+        panel.add(getNameField());
 
         JButton saveButton = createButton("Save", this::saveAction);
         JButton cancelButton = createButton("Cancel", this::cancelAction);
@@ -44,19 +56,19 @@ public class AddCategoryDialog extends JDialog {
     }
 
     private void saveAction(ActionEvent e) {
-        String categoryName = nameField.getText().trim();
+        String categoryName = getNameField().getText().trim();
 
         if (categoryName.isEmpty()) {
             showMessage("Category name cannot be empty.");
             return;
         }
 
-        if (categoryViewModel.categoryExists(categoryName)) {
+        if (getCategoryViewModel().categoryExists(categoryName)) {
             showMessage("Category with the same name already exists.");
             return;
         }
 
-        categoryViewModel.addCategory(categoryName);
+        getCategoryViewModel().addCategory(categoryName);
         dispose();
     }
 
@@ -83,7 +95,6 @@ public class AddCategoryDialog extends JDialog {
             } catch (SQLException | IOException e) {
                 throw new RuntimeException(e);
             }
-            // TODO HANDLE EXCEPTIONS with try catch
             addCategoryDialog.setVisible(true);
         });
     }

@@ -19,10 +19,9 @@ import java.util.List;
 
 public class AddCostDialog extends JDialog {
     private final CostViewModel costViewModel = new CostViewModel(new AddCostUseCaseImpl());
-
     private JComboBox<String> categoryField;
-    private final JTextField sumField;
-    private final JTextField descriptionField;
+    private JTextField sumField;
+    private JTextField descriptionField;
     private JComboBox<String> currencyField;
 
 
@@ -30,18 +29,50 @@ public class AddCostDialog extends JDialog {
         super(owner, "Add Cost", true);
         setSize(400, 300);
 
-        categoryField = new JComboBox<String>();
-        sumField = new JTextField();
-        currencyField = new JComboBox<String>();
-        descriptionField = new JTextField();
+        setCategoryField(new JComboBox<String>());
+        setSumField(new JTextField());
+        setCategoryField(new JComboBox<String>());
+        setDescriptionField(new JTextField());
 
         initComponents();
     }
 
+    public JComboBox<String> getCategoryField() {
+        return categoryField;
+    }
+
+    public void setCategoryField(JComboBox<String> categoryField) {
+        this.categoryField = categoryField;
+    }
+
+    public JTextField getSumField() {
+        return sumField;
+    }
+
+    public void setSumField(JTextField sumField) {
+        this.sumField = sumField;
+    }
+
+    public void setDescriptionField(JTextField descriptionField) {
+        this.descriptionField = descriptionField;
+    }
+
+    public JTextField getDescriptionField() {
+        return descriptionField;
+    }
+
+    public JComboBox<String> getCurrencyField() {
+        return currencyField;
+    }
+
+    public void setCurrencyField(JComboBox<String> currencyField) {
+        this.currencyField = currencyField;
+    }
+
     private void initComponents() throws SQLException, IOException {
         JPanel panel = new JPanel(new GridLayout(5, 2));
-        addLabelAndField(panel, "Sum:", sumField);
-        addLabelAndField(panel, "Description:", descriptionField);
+        addLabelAndField(panel, "Sum:", getSumField());
+        addLabelAndField(panel, "Description:", getDescriptionField());
 
         CategoryRepositoryImpl categoryRepository = new CategoryRepositoryImpl();
         List<Category> categories = categoryRepository.getAllCategories();
@@ -50,13 +81,13 @@ public class AddCostDialog extends JDialog {
         for(Category cat : categories){
             categoryNames[index++] = cat.getName();
         }
-        categoryField = new JComboBox<>(categoryNames);
-        addLabelAndComboBox(panel, "Category:", categoryField);
+        setCategoryField(new JComboBox<>(categoryNames));
+        addLabelAndComboBox(panel, "Category:", getCategoryField());
 
         ConfigurationManager configurationManager = new ConfigurationManager();
         String[] currencies = configurationManager.getSupportedCurrencies();
-        currencyField = new JComboBox<>(currencies);
-        addLabelAndComboBox(panel, "Currency:", currencyField);
+        setCurrencyField(new JComboBox<>(currencies));
+        addLabelAndComboBox(panel, "Currency:", getCurrencyField());
 
         JButton saveButton = createButton("Save", this::saveAction);
         JButton cancelButton = createButton("Cancel", this::cancelAction);
@@ -84,10 +115,10 @@ public class AddCostDialog extends JDialog {
     }
 
     private void saveAction(ActionEvent e) {
-        String categoryText = (String) categoryField.getSelectedItem();
-        String sumText = sumField.getText().trim();
-        String currency = (String) currencyField.getSelectedItem();
-        String description = descriptionField.getText().trim();
+        String categoryText = (String) getCategoryField().getSelectedItem();
+        String sumText = getSumField().getText().trim();
+        String currency = (String) getCurrencyField().getSelectedItem();
+        String description = getDescriptionField().getText().trim();
 
         if (categoryText.isEmpty() || sumText.isEmpty()) {
             showMessage("Category and Sum fields are required.");

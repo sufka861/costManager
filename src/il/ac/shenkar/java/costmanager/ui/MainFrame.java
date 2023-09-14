@@ -1,12 +1,7 @@
 package il.ac.shenkar.java.costmanager.ui;
 
-import il.ac.shenkar.java.costmanager.domain.usecase.interfaces.AddCategoryUseCase;
-import il.ac.shenkar.java.costmanager.viewmodel.CategoryViewModel;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -21,42 +16,27 @@ public class MainFrame extends JFrame {
         JButton addCategoryButton = new JButton("Add Category");
         JButton viewReportButton = new JButton("View Report");
 
-        addCostButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                try {
-                    new AddCostDialog(MainFrame.this, null).setVisible(true);
-                } catch (SQLException | IOException ex) {
-                    throw new RuntimeException(ex);
-                }
+        addCostButton.addActionListener(e -> {
+            try {
+                new AddCostDialog(MainFrame.this, null).setVisible(true);
+            } catch (SQLException | IOException ex) {
+                throw new RuntimeException(ex);
             }
         });
 
-        addCategoryButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                try {
-                    new AddCategoryDialog(MainFrame.this, null).setVisible(true);
-                } catch (SQLException | IOException ex) {
-                    throw new RuntimeException(ex);
-                }
+        addCategoryButton.addActionListener(e -> {
+            try {
+                new AddCategoryDialog(MainFrame.this, null).setVisible(true);
+            } catch (SQLException | IOException ex) {
+                throw new RuntimeException(ex);
             }
         });
 
-        viewReportButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                try {
-                    new ReportDialog(MainFrame.this, null).setVisible(true);
-                } catch (SQLException | IOException ex) {
-                    throw new RuntimeException(ex);
-                }
+        viewReportButton.addActionListener(e -> {
+            try {
+                new ReportDialog(MainFrame.this, null).setVisible(true);
+            } catch (SQLException | IOException ex) {
+                throw new RuntimeException(ex);
             }
         });
 

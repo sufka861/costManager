@@ -4,8 +4,6 @@ import il.ac.shenkar.java.costmanager.domain.model.Cost;
 import il.ac.shenkar.java.costmanager.domain.usecase.implementations.GetCostReportUseCaseImpl;
 import il.ac.shenkar.java.costmanager.domain.util.DateLabelFormatter;
 import il.ac.shenkar.java.costmanager.viewmodel.ReportViewModel;
-import org.jdatepicker.DateModel;
-import org.jdatepicker.JDateComponentFactory;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -17,10 +15,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -32,8 +26,16 @@ public class ReportDialog extends JDialog {
     public ReportDialog(Frame owner, ReportViewModel reportViewModel) throws SQLException, IOException {
         super(owner, "Cost Report", true);
         setSize(600, 400);
-        datePicker = createDatePicker();
+        setDatePicker(createDatePicker());
         initComponents();
+    }
+
+    public JDatePicker getDatePicker() {
+        return datePicker;
+    }
+
+    public void setDatePicker(JDatePicker datePicker) {
+        this.datePicker = datePicker;
     }
 
     private JDatePicker createDatePicker() {
@@ -49,13 +51,10 @@ public class ReportDialog extends JDialog {
         return datePicker;
     }
 
-
-
-
     private void initComponents() {
         JPanel panel = new JPanel(new GridLayout(2, 2));
         panel.add(new JLabel("Date:"));
-        panel.add((JComponent) datePicker);
+        panel.add((JComponent) getDatePicker());
 
         JButton generateButton = createButton("Generate Report", this::generateAction);
         JButton cancelButton = createButton("Cancel", this::cancelAction);
@@ -73,7 +72,7 @@ public class ReportDialog extends JDialog {
     }
 
     private void generateAction(ActionEvent e) {
-        Date date = (Date) datePicker.getModel().getValue();
+        Date date = (Date) getDatePicker().getModel().getValue();
 
         if (date == null) {
             showMessage("Please select a valid date.");
@@ -115,6 +114,6 @@ public class ReportDialog extends JDialog {
                 throw new RuntimeException(e);
             }
             reportDialog.setVisible(true);
-   });
-}
+        });
+    }
 }
