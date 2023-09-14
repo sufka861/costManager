@@ -39,12 +39,7 @@ public class CostRepositoryImpl implements CostRepository {
     }
 
     @Override
-    public Cost getCostById(int costId) {
-        return null;
-    }
-
-    @Override
-    public List<Cost> getCostsByDate(Date date) {
+    public List<Cost> getCosts(Date date) {
         List<Cost> costs = new ArrayList<>();
         String selectQuery = "SELECT * FROM costs WHERE DATE = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
@@ -68,43 +63,5 @@ public class CostRepositoryImpl implements CostRepository {
             throw new RuntimeException(e);
         }
    return costs;
-    }
-
-//    public List<Cost> getAllCosts() {
-//        List<Cost> costs = new ArrayList<>();
-//        String selectQuery = "SELECT * FROM costs";
-//        try (Statement statement = connection.createStatement();
-//             ResultSet resultSet = statement.executeQuery(selectQuery)) {
-//            while (resultSet.next()) {
-//                int id = resultSet.getInt("id");
-//                String description = resultSet.getString("description");
-//                double amount = resultSet.getDouble("amount");
-//                costs.add(new Cost(id, description));
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return costs;
-//    }
-
-    public void updateCost(Cost cost) {
-        String updateQuery = "UPDATE costs SET description = ? WHERE id = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
-            preparedStatement.setString(1, cost.getDescription());
-            preparedStatement.setInt(3, cost.getId());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void deleteCost(int costId) {
-        String deleteQuery = "DELETE FROM costs WHERE id = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
-            preparedStatement.setInt(1, costId);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 }

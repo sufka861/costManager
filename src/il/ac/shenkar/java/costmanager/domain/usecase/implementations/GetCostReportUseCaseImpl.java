@@ -19,7 +19,7 @@ public class GetCostReportUseCaseImpl implements GetCostReportUseCase {
 
     @Override
     public List<Cost> getCostsByDate(Date date) {
-        List<Cost> result = costRepository.getCostsByDate(date);
+        List<Cost> result = costRepository.getCosts(date);
         // TODO check and validate result
         return result;
         //throw new UnsupportedOperationException("Unimplemented method 'getCostsByDate'");
