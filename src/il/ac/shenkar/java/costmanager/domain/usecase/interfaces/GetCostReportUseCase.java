@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface GetCostReportUseCase {
     List<Cost> getCostsByDate(Date date);
-
 }

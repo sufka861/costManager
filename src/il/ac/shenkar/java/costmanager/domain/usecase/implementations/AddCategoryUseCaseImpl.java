@@ -12,18 +12,11 @@ public class AddCategoryUseCaseImpl implements AddCategoryUseCase {
 
     private final CategoryRepository categoryRepository = new CategoryRepositoryImpl();
 
-    public AddCategoryUseCaseImpl() throws SQLException, IOException {
-        // TODO: HANDLE EXCEPTIONS
-    }
+    public AddCategoryUseCaseImpl() throws SQLException, IOException {}
 
     @Override
     public void addCategory(String name) {
         Category category = new Category(name);
         categoryRepository.addCategory(category);
-
-        // TODO Auto-generated method stub
-        // TODO CREATE CATEGORY name as enum
-        // TODO send to category repository
-        //throw new UnsupportedOperationException("Unimplemented method 'addCategory'");
     }
 }

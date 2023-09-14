@@ -11,14 +11,10 @@ import java.sql.SQLException;
 public class AddCostUseCaseImpl implements AddCostUseCase {
     private final CostRepository costRepository = new CostRepositoryImpl();
 
-    public AddCostUseCaseImpl() throws SQLException, IOException {
-    }
+    public AddCostUseCaseImpl() throws SQLException, IOException {}
 
     @Override
     public void addCost(Cost cost) {
         costRepository.addCost(cost);
-        // TODO Auto-generated method stub
-        //throw new UnsupportedOperationException("Unimplemented method 'addCost'");
     }
-    // Implement methods related to adding costs here
 }
