@@ -84,7 +84,15 @@ public class Cost {
 
     public void setCurrency(String currency)
     {
-        this.currency = currency;
+        try {
+            if (currency.matches("^[a-zA-Z]+$")) {
+                this.currency = currency;
+            } else {
+                throw new IllegalArgumentException("currency should contain only alphabetic characters (a-z, A-Z).");
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid currency: " + e.getMessage());
+        }
     }
 
     public String getDescription()
@@ -94,23 +102,38 @@ public class Cost {
 
     public void setDescription(String description)
     {
-        this.description = description;
-    }
+        try {
+            if (description.matches("^[a-zA-Z]+$")) {
+                this.description = description;
+            } else {
+                throw new IllegalArgumentException("description should contain only alphabetic characters (a-z, A-Z).");
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid description: " + e.getMessage());
+        }        }
 
     public Date getDate()
     {
         return date;
     }
 
-    public void setDate(Date date)
-    {
-        this.date = date;
+    public void setDate(Date date) {
+        if (date != null) {
+            this.date = date;
+        } else {
+            throw new IllegalArgumentException("Date cannot be null.");
+        }
     }
+
 
     @Override
     public String toString() {
 
-        return getCategory().getName() + " " + getSum() + " " + getCurrency() + " " + getDescription() + " " + getDate().toString();
+        return "Category: " + getCategory().getName() +
+                " Sum: " + getSum() +
+                " Currency: " + getCurrency() +
+                " Description: " + getDescription() +
+                " Date: " + getDate().toString();
     }
 }
 
