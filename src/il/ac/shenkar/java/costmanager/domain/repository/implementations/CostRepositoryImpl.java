@@ -71,22 +71,22 @@ public class CostRepositoryImpl implements CostRepository {
    return costs;
     }
 
-    public List<Cost> getAllCosts() {
-        List<Cost> costs = new ArrayList<>();
-        String selectQuery = "SELECT * FROM costs";
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(selectQuery)) {
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String description = resultSet.getString("description");
-                double amount = resultSet.getDouble("amount");
-                costs.add(new Cost(id, description));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return costs;
-    }
+//    public List<Cost> getAllCosts() {
+//        List<Cost> costs = new ArrayList<>();
+//        String selectQuery = "SELECT * FROM costs";
+//        try (Statement statement = connection.createStatement();
+//             ResultSet resultSet = statement.executeQuery(selectQuery)) {
+//            while (resultSet.next()) {
+//                int id = resultSet.getInt("id");
+//                String description = resultSet.getString("description");
+//                double amount = resultSet.getDouble("amount");
+//                costs.add(new Cost(id, description));
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return costs;
+//    }
 
     public void updateCost(Cost cost) {
         String updateQuery = "UPDATE costs SET description = ? WHERE id = ?";

@@ -60,7 +60,6 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(selectQuery)) {
             while (resultSet.next()) {
-                int id = resultSet.getInt("id");
                 String name = resultSet.getString("name");
                 categories.add(new Category(name));
             }

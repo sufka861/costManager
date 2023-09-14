@@ -9,7 +9,7 @@ public interface CostRepository {
     void addCost(Cost cost);
     Cost getCostById(int costId);
     List<Cost> getCostsByDate(Date date);
-    List<Cost> getAllCosts();
+//    List<Cost> getAllCosts();
     void updateCost(Cost cost);
     void deleteCost(int costId);
 

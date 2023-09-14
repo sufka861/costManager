@@ -12,17 +12,17 @@ public class Cost {
 
     public Cost(Category category, double sum, String currency, String description, Date date)
     {
-        this.category = category;
-        this.sum = sum;
-        this.currency = currency;
-        this.description = description;
-        this.date = date;
+        setCategory(category);
+        setSum(sum);
+        setCurrency(currency);
+        setDescription(description);
+        setDate(date);
     }
 
-    public Cost(int id, String description) {
-        this.id = id;
-        this.description = description;
-    }
+//    public Cost(int id, String description) {
+//        this.id = id;
+//        this.description = description;
+//    }
 
     public int getId()
     {
