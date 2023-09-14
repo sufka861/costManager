@@ -102,6 +102,8 @@ public class AddCostDialog extends JDialog {
             dispose();
         } catch (NumberFormatException ex) {
             showMessage("Sum must be a valid number.");
+        } catch (SQLException | IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 

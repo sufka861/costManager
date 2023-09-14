@@ -1,5 +1,8 @@
 package il.ac.shenkar.java.costmanager.domain.model;
+import il.ac.shenkar.java.costmanager.domain.repository.implementations.CategoryRepositoryImpl;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Date;
 
 public class Cost {
@@ -10,19 +13,13 @@ public class Cost {
     private String description;
     private Date date;
 
-    public Cost(Category category, double sum, String currency, String description, Date date)
-    {
+    public Cost(Category category, double sum, String currency, String description, Date date) throws SQLException, IOException {
         setCategory(category);
         setSum(sum);
         setCurrency(currency);
         setDescription(description);
         setDate(date);
     }
-
-//    public Cost(int id, String description) {
-//        this.id = id;
-//        this.description = description;
-//    }
 
     public int getId()
     {
@@ -31,7 +28,15 @@ public class Cost {
 
     public void setId(int id)
     {
-        this.id = id;
+        try {
+            if (id >= 0) {
+                this.id = id;
+            } else {
+                throw new IllegalArgumentException("ID should contain only integers.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid ID: " + e.getMessage());
+        }
     }
 
     public Category getCategory()
@@ -44,9 +49,15 @@ public class Cost {
     }
 
 
-    public void setCategory(Category category)
-    {
-        this.category = category;
+    public void setCategory(Category category) throws SQLException, IOException {
+        CategoryRepositoryImpl categoryRepository = new CategoryRepositoryImpl();
+        try {
+            // Validate that category exists in the DB and therefore it is valid
+            categoryRepository.getCategoryByName(category.getName());
+            this.category = category;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public double getSum()
@@ -56,8 +67,15 @@ public class Cost {
 
     public void setSum(double sum)
     {
-        this.sum = sum;
-    }
+        try {
+            if (sum >= 0) {
+                this.sum = sum;
+            } else {
+                throw new IllegalArgumentException("Sum should contain only positive integers.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid sum: " + e.getMessage());
+        }    }
 
     public String getCurrency()
     {
