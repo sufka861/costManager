@@ -7,21 +7,23 @@ import java.io.InputStream;
 public class ConfigurationManager {
     private String[] starterCategoryNames;
     private String[] supportedCurrencies;
+    private String jdbcURL;
+
 
     public ConfigurationManager() {
         Properties properties = new Properties();
 
         try (InputStream inputStream = ConfigurationManager.class.getResourceAsStream("config.properties")) {
             if (inputStream != null) {
-                // TODO: INVERT if so its not nested
                 properties.load(inputStream);
 
                 String starterCategoryNamesProperty = properties.getProperty("starterCategoryNames");
                 String supportedCurrenciesProperty = properties.getProperty("supportedCurrencies");
 
+                setJdbcURL(properties.getProperty("jdbc.url"));
                 // Split the comma-separated values into arrays
-                this.starterCategoryNames = starterCategoryNamesProperty.split(",");
-                this.supportedCurrencies = supportedCurrenciesProperty.split(",");
+                setStarterCategoryNames(starterCategoryNamesProperty.split(","));
+                setSupportedCurrencies(supportedCurrenciesProperty.split(","));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -42,6 +44,14 @@ public class ConfigurationManager {
 
     public void setSupportedCurrencies(String[] supportedCurrencies) {
         this.supportedCurrencies = supportedCurrencies;
+    }
+
+    public String getJdbcURL() {
+        return jdbcURL;
+    }
+
+    public void setJdbcURL(String jdbcURL) {
+        this.jdbcURL = jdbcURL;
     }
 }
 

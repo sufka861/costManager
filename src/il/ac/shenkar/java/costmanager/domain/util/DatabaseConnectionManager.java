@@ -1,22 +1,18 @@
 package il.ac.shenkar.java.costmanager.domain.util;
-import il.ac.shenkar.java.costmanager.domain.util.ConfigurationManager;
 import il.ac.shenkar.java.costmanager.domain.usecase.implementations.AddCategoryUseCaseImpl;
 
 import java.io.IOException;
 import java.sql.*;
-import java.util.Arrays;
 import java.util.Objects;
-import java.util.Properties;
 
 public class DatabaseConnectionManager {
     private static DatabaseConnectionManager instance;
     private Connection connection;
-    Properties properties = new Properties();
+    private final ConfigurationManager configurationManager = new ConfigurationManager();
 
     private DatabaseConnectionManager() throws IOException, SQLException {
-        String jdbcURL = "jdbc:derby:costManagerDB;create=true";
         try {
-            connection = DriverManager.getConnection(jdbcURL);
+            setConnection(DriverManager.getConnection(configurationManager.getJdbcURL()));
             System.out.println("Connected to Derby DB");
 
             listAllTablesAndData();
@@ -25,16 +21,19 @@ public class DatabaseConnectionManager {
         }
     }
 
-    public void closeConnection() throws SQLException {
-        String shutDownURL = "jdbc:derby:;shutdown=true";
-        DriverManager.getConnection(shutDownURL);
+    public static void setInstance(DatabaseConnectionManager instance) {
+        DatabaseConnectionManager.instance = instance;
     }
 
     public static synchronized DatabaseConnectionManager getInstance() throws SQLException, IOException {
         if (instance == null) {
-            instance = new DatabaseConnectionManager();
+            setInstance(new DatabaseConnectionManager());
         }
         return instance;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
     }
 
     public Connection getConnection() {
@@ -50,27 +49,11 @@ public class DatabaseConnectionManager {
             while (resultSet.next()) {
                 String tableName = resultSet.getString("TABLE_NAME");
                 System.out.println(tableName);
-//                printTableColumnNames(tableName);
                 printTableData(tableName);
             }
 
             resultSet.close();
         }
-    }
-
-    private void printTableColumnNames(String tableName) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSetMetaData metaData = statement.executeQuery("SELECT * FROM " + tableName).getMetaData();
-        int columnCount = metaData.getColumnCount();
-
-        System.out.println("Column names in table '" + tableName + "':");
-
-        for (int i = 1; i <= columnCount; i++) {
-            String columnName = metaData.getColumnName(i);
-            System.out.println(columnName);
-        }
-
-        statement.close();
     }
 
     private void printTableData(String tableName) throws SQLException {
@@ -95,12 +78,10 @@ public class DatabaseConnectionManager {
         statement.close();
     }
 
-
     public void createTableIfNotExists(String tableName) {
         try {
             DatabaseMetaData metaData = connection.getMetaData();
             ResultSet resultSet = metaData.getTables(null, null, tableName, null);
-            ConfigurationManager configurationManager = new ConfigurationManager();
             if (!resultSet.next()) {
                 String createTableQuery;
                 String[] initialCatFields;
@@ -140,6 +121,5 @@ public class DatabaseConnectionManager {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 }
