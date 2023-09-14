@@ -7,15 +7,24 @@ import java.util.Date;
 import java.util.List;
 
 public class ReportViewModel {
+
     private GetCostReportUseCase getCostReportUseCase;
 
     public ReportViewModel(GetCostReportUseCase getCostReportUseCase)
     {
+        setGetCostReportUseCase(getCostReportUseCase);
+    }
+
+    public GetCostReportUseCase getGetCostReportUseCase() {
+        return getCostReportUseCase;
+    }
+
+    public void setGetCostReportUseCase(GetCostReportUseCase getCostReportUseCase) {
         this.getCostReportUseCase = getCostReportUseCase;
     }
 
     public List<Cost> getCostsByDate(Date date)
     {
-        return getCostReportUseCase.getCostsByDate(date);
+        return getGetCostReportUseCase().getCostsByDate(date);
     }
 }
