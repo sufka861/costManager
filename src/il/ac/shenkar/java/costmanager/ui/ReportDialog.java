@@ -10,11 +10,13 @@ import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -25,6 +27,7 @@ import java.util.Properties;
 public class ReportDialog extends JDialog {
     private final ReportViewModel reportViewModel = new ReportViewModel(new GetCostReportUseCaseImpl());
     private JDatePicker datePicker;
+    private JTable reportTable;
 
     /**
      * Constructs a new `ReportDialog`.
@@ -36,7 +39,7 @@ public class ReportDialog extends JDialog {
      */
     public ReportDialog(Frame owner, ReportViewModel reportViewModel) throws SQLException, IOException {
         super(owner, "Cost Report", true);
-        setSize(600, 400);
+        setSize(800, 600);
         setDatePicker(createDatePicker());
         initComponents();
     }
@@ -73,15 +76,43 @@ public class ReportDialog extends JDialog {
     }
 
     private void initComponents() {
-        JPanel panel = new JPanel(new GridLayout(2, 2));
-        panel.add(new JLabel("Date:"));
-        panel.add((JComponent) getDatePicker());
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
 
+        // Title Label
+        JLabel titleLabel = new JLabel("Generate Cost Report");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        panel.add(titleLabel, gbc);
+
+        // Date Label
+        JLabel dateLabel = new JLabel("Select Date:");
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        panel.add(dateLabel, gbc);
+
+        // Date Picker
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        panel.add((JComponent) getDatePicker(), gbc);
+
+        // Generate Button
         JButton generateButton = createButton("Generate Report", this::generateAction);
-        JButton cancelButton = createButton("Cancel", this::cancelAction);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 2;
+        panel.add(generateButton, gbc);
 
-        panel.add(generateButton);
-        panel.add(cancelButton);
+        // Cancel Button
+        JButton cancelButton = createButton("Cancel", this::cancelAction);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        panel.add(cancelButton, gbc);
 
         getContentPane().add(panel);
     }
@@ -107,12 +138,29 @@ public class ReportDialog extends JDialog {
             return;
         }
 
-        JTextArea reportTextArea = new JTextArea();
+        DefaultTableModel tableModel = new DefaultTableModel();
+        tableModel.addColumn("Category");
+        tableModel.addColumn("Sum");
+        tableModel.addColumn("Currency");
+        tableModel.addColumn("Description");
+        tableModel.addColumn("Date");
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         for (Cost cost : reportData) {
-            reportTextArea.append(cost.toString() + "\n");
+            Object[] rowData = {
+                    cost.getCategory().getName(),
+                    cost.getSum(),
+                    cost.getCurrency(),
+                    cost.getDescription(),
+                    dateFormat.format(cost.getDate())
+            };
+            tableModel.addRow(rowData);
         }
 
-        JScrollPane scrollPane = new JScrollPane(reportTextArea);
+        reportTable = new JTable(tableModel);
+        reportTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        JScrollPane scrollPane = new JScrollPane(reportTable);
+
         JOptionPane.showMessageDialog(this, scrollPane, "Report", JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -122,19 +170,5 @@ public class ReportDialog extends JDialog {
 
     private void showMessage(String message) {
         JOptionPane.showMessageDialog(this, message, "Validation Error", JOptionPane.ERROR_MESSAGE);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame();
-            ReportViewModel reportViewModel = new ReportViewModel(null);
-            ReportDialog reportDialog = null;
-            try {
-                reportDialog = new ReportDialog(frame, reportViewModel);
-            } catch (SQLException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            reportDialog.setVisible(true);
-        });
     }
 }

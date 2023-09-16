@@ -233,30 +233,4 @@ public class AddCostDialog extends JDialog {
     private void showMessage(String message) {
         JOptionPane.showMessageDialog(this, message);
     }
-
-    /**
-     * The main method to launch the AddCostDialog.
-     *
-     * @param args The command-line arguments.
-     */
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame();
-            CostViewModel costViewModel = null;
-            try {
-                costViewModel = new CostViewModel(new AddCostUseCaseImpl());
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            AddCostDialog addCostDialog = null;
-            try {
-                addCostDialog = new AddCostDialog(frame, costViewModel);
-            } catch (SQLException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            addCostDialog.setVisible(true);
-        });
-    }
 }

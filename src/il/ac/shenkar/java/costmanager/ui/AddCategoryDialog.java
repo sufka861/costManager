@@ -132,28 +132,4 @@ public class AddCategoryDialog extends JDialog {
     private void showMessage(String message) {
         JOptionPane.showMessageDialog(this, message, "Validation Error", JOptionPane.ERROR_MESSAGE);
     }
-
-    /**
-     * The main method to launch the AddCategoryDialog.
-     *
-     * @param args The command-line arguments.
-     */
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame();
-            CategoryViewModel categoryViewModel = null;
-            try {
-                categoryViewModel = new CategoryViewModel(new AddCategoryUseCaseImpl());
-            } catch (SQLException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            AddCategoryDialog addCategoryDialog = null;
-            try {
-                addCategoryDialog = new AddCategoryDialog(frame, categoryViewModel);
-            } catch (SQLException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            addCategoryDialog.setVisible(true);
-        });
-    }
 }
