@@ -19,10 +19,21 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * The `ReportDialog` class represents the dialog for generating a cost report.
+ */
 public class ReportDialog extends JDialog {
     private final ReportViewModel reportViewModel = new ReportViewModel(new GetCostReportUseCaseImpl());
     private JDatePicker datePicker;
 
+    /**
+     * Constructs a new `ReportDialog`.
+     *
+     * @param owner           The owner frame.
+     * @param reportViewModel The report view model.
+     * @throws SQLException If there's an issue with SQL.
+     * @throws IOException  If there's an issue with I/O operations.
+     */
     public ReportDialog(Frame owner, ReportViewModel reportViewModel) throws SQLException, IOException {
         super(owner, "Cost Report", true);
         setSize(600, 400);
@@ -30,10 +41,20 @@ public class ReportDialog extends JDialog {
         initComponents();
     }
 
+    /**
+     * Gets the date picker component.
+     *
+     * @return The date picker component.
+     */
     public JDatePicker getDatePicker() {
         return datePicker;
     }
 
+    /**
+     * Sets the date picker component.
+     *
+     * @param datePicker The date picker component to set.
+     */
     public void setDatePicker(JDatePicker datePicker) {
         this.datePicker = datePicker;
     }
