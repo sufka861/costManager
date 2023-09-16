@@ -9,14 +9,28 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The `CategoryRepositoryImpl` class provides methods for interacting with the 'CATEGORIES' table in the database.
+ */
 public class CategoryRepositoryImpl implements CategoryRepository {
     private Connection connection;
 
+    /**
+     * Constructs a new `CategoryRepositoryImpl` and initializes the database connection.
+     *
+     * @throws SQLException If there's an issue with the database connection.
+     * @throws IOException  If there's an issue with I/O operations.
+     */
     public CategoryRepositoryImpl() throws SQLException, IOException {
         connection = DatabaseConnectionManager.getInstance().getConnection();
         DatabaseConnectionManager.getInstance().createTableIfNotExists("CATEGORIES");
     }
 
+    /**
+     * Adds a new category to the database.
+     *
+     * @param category The category to add.
+     */
     @Override
     public void addCategory(Category category) {
         String insertQuery = "INSERT INTO categories (name) VALUES (?)";
@@ -33,6 +47,11 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         }
     }
 
+    /**
+     * Retrieves all categories from the database.
+     *
+     * @return A list of all categories.
+     */
     @Override
     public List<Category> getAllCategories() {
         List<Category> categories = new ArrayList<>();
@@ -49,6 +68,12 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         return categories;
     }
 
+    /**
+     * Retrieves a category by its name from the database.
+     *
+     * @param wantedName The name of the category to retrieve.
+     * @return The category with the specified name.
+     */
     @Override
     public Category getCategory(String wantedName) {
         String selectQuery = "SELECT * FROM CATEGORIES WHERE NAME = ?";

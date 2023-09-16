@@ -11,14 +11,28 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * The `CostRepositoryImpl` class provides methods for interacting with the 'COSTS' table in the database.
+ */
 public class CostRepositoryImpl implements CostRepository {
     private Connection connection;
 
+    /**
+     * Constructs a new `CostRepositoryImpl` and initializes the database connection.
+     *
+     * @throws SQLException If there's an issue with the database connection.
+     * @throws IOException  If there's an issue with I/O operations.
+     */
     public CostRepositoryImpl() throws SQLException, IOException {
         connection = DatabaseConnectionManager.getInstance().getConnection();
         DatabaseConnectionManager.getInstance().createTableIfNotExists("COSTS");
     }
 
+    /**
+     * Adds a new cost to the database.
+     *
+     * @param cost The cost to add.
+     */
     public void addCost(Cost cost) {
         String insertQuery = "INSERT INTO COSTS (category, amount, currency, description, date) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
@@ -38,6 +52,12 @@ public class CostRepositoryImpl implements CostRepository {
         }
     }
 
+    /**
+     * Retrieves costs for a specific date from the database.
+     *
+     * @param date The date for which to retrieve costs.
+     * @return A list of costs for the specified date.
+     */
     @Override
     public List<Cost> getCosts(Date date) {
         List<Cost> costs = new ArrayList<>();
@@ -62,6 +82,6 @@ public class CostRepositoryImpl implements CostRepository {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-   return costs;
+        return costs;
     }
 }
