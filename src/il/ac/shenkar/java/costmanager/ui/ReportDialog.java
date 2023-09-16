@@ -62,6 +62,11 @@ public class ReportDialog extends JDialog {
         this.datePicker = datePicker;
     }
 
+    /**
+     * Creates and configures the date picker component.
+     *
+     * @return The configured date picker component.
+     */
     private JDatePicker createDatePicker() {
         UtilDateModel model = new UtilDateModel();
         Properties properties = new Properties();
@@ -75,6 +80,9 @@ public class ReportDialog extends JDialog {
         return datePicker;
     }
 
+    /**
+     * Initializes and configures the components of the dialog.
+     */
     private void initComponents() {
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -117,12 +125,24 @@ public class ReportDialog extends JDialog {
         getContentPane().add(panel);
     }
 
+    /**
+     * Creates a button with the specified label and ActionListener.
+     *
+     * @param label    The label of the button.
+     * @param listener The ActionListener for the button.
+     * @return The configured button.
+     */
     private JButton createButton(String label, ActionListener listener) {
         JButton button = new JButton(label);
         button.addActionListener(listener);
         return button;
     }
 
+    /**
+     * Action to generate the cost report based on the selected date.
+     *
+     * @param e The ActionEvent.
+     */
     private void generateAction(ActionEvent e) {
         Date date = (Date) getDatePicker().getModel().getValue();
 
@@ -164,10 +184,20 @@ public class ReportDialog extends JDialog {
         JOptionPane.showMessageDialog(this, scrollPane, "Report", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * Action to cancel the operation and close the dialog.
+     *
+     * @param e The ActionEvent.
+     */
     private void cancelAction(ActionEvent e) {
         dispose();
     }
 
+    /**
+     * Displays a validation error message dialog with the specified message.
+     *
+     * @param message The error message to display.
+     */
     private void showMessage(String message) {
         JOptionPane.showMessageDialog(this, message, "Validation Error", JOptionPane.ERROR_MESSAGE);
     }
